@@ -1,0 +1,44 @@
+.page.examples {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.page.examples h1 {
+  font-size: 48px;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page.examples section {
+  margin-bottom: 60px;
+}
+
+.page.examples h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.page.examples .description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.page.examples pre {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.page.examples code {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}

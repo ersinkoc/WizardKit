@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WizardKit - Basic Example</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .wizard-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+    }
+
+    .wizard-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .wizard-header h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .wizard-progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .wizard-progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      transition: all 0.3s;
+    }
+
+    .wizard-progress-dot.active {
+      background: white;
+      transform: scale(1.2);
+    }
+
+    .wizard-content {
+      padding: 30px;
+    }
+
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+
+    .step-content h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .form-field {
+      margin-bottom: 20px;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .form-field input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .form-field input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-field input.error {
+      border-color: #ef4444;
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .wizard-navigation {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 30px;
+      background: #f5f5f5;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-prev {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-prev:not(:disabled):hover {
+      background: #d0d0d0;
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-next:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .summary {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .summary p {
+      margin: 5px 0;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-message h2 {
+      color: #10b981;
+      margin-bottom: 10px;
+    }
+
+    .success-message p {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="wizard-container">
+    <div class="wizard-header">
+      <h1>🧙 WizardKit Demo</h1>
+      <div class="wizard-progress" id="progress"></div>
+    </div>
+
+    <div class="wizard-content">
+      <!-- Step 1: Personal Info -->
+      <div class="step-content active" data-step="personal">
+        <h2>Personal Information</h2>
+        <div class="form-field">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" name="name" placeholder="Enter your name">
+          <div class="error-message" id="name-error"></div>
+        </div>
+        <div class="form-field">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email">
+          <div class="error-message" id="email-error"></div>
+        </div>
+      </div>
+
+      <!-- Step 2: Address -->
+      <div class="step-content" data-step="address">
+        <h2>Address Information</h2>
+        <div class="form-field">
+          <label for="address">Street Address *</label>
+          <input type="text" id="address" name="address" placeholder="Enter your address">
+          <div class="error-message" id="address-error"></div>
+        </div>
+        <div class="form-field">
+          <label for="city">City *</label>
+          <input type="text" id="city" name="city" placeholder="Enter your city">
+          <div class="error-message" id="city-error"></div>
+        </div>
+      </div>
+
+      <!-- Step 3: Confirm -->
+      <div class="step-content" data-step="confirm">
+        <h2>Confirm Your Information</h2>
+        <div class="summary" id="summary">
+          <p><strong>Name:</strong> <span id="summary-name"></span></p>
+          <p><strong>Email:</strong> <span id="summary-email"></span></p>
+          <p><strong>Address:</strong> <span id="summary-address"></span></p>
+          <p><strong>City:</strong> <span id="summary-city"></span></p>
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div class="step-content" data-step="success">
+        <div class="success-message">
+          <h2>✓ Registration Complete!</h2>
+          <p>Thank you for signing up.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-navigation" id="navigation">
+      <button class="btn btn-prev" id="prevBtn" disabled>← Previous</button>
+      <button class="btn btn-next" id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <script type="module">
+    // This would be the bundled wizardkit in production
+    // For demo purposes, we're using a mock implementation
+
+    class SimpleWizard {
+      constructor(steps) {
+        this.steps = steps;
+        this.currentStep = 0;
+        this.data = {};
+      }
+
+      next() {
+        if (this.currentStep < this.steps.length - 1) {
+          this.currentStep++;
+          return true;
+        }
+        return false;
+      }
+
+      prev() {
+        if (this.currentStep > 0) {
+          this.currentStep--;
+          return true;
+        }
+        return false;
+      }
+
+      setData(data) {
+        this.data = { ...this.data, ...data };
+      }
+
+      getData() {
+        return this.data;
+      }
+
+      isFirst() {
+        return this.currentStep === 0;
+      }
+
+      isLast() {
+        return this.currentStep === this.steps.length - 1;
+      }
+    }
+
+    // Initialize wizard
+    const wizard = new SimpleWizard(['personal', 'address', 'confirm']);
+
+    // DOM elements
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressContainer = document.getElementById('progress');
+    const summary = {
+      name: document.getElementById('summary-name'),
+      email: document.getElementById('summary-email'),
+      address: document.getElementById('summary-address'),
+      city: document.getElementById('summary-city'),
+    };
+
+    // Update progress dots
+    function updateProgress() {
+      progressContainer.innerHTML = '';
+      wizard.steps.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = `wizard-progress-dot ${index <= wizard.currentStep ? 'active' : ''}`;
+        progressContainer.appendChild(dot);
+      });
+    }
+
+    // Update step content
+    function updateStep() {
+      // Hide all steps
+      document.querySelectorAll('.step-content').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      // Show current step
+      if (wizard.currentStep < wizard.steps.length) {
+        const currentStepId = wizard.steps[wizard.currentStep];
+        document.querySelector(`[data-step="${currentStepId}"]`).classList.add('active');
+      }
+
+      // Update navigation buttons
+      prevBtn.disabled = wizard.isFirst();
+      nextBtn.textContent = wizard.isLast() ? 'Complete ✓' : 'Next →';
+
+      // Update summary on confirm step
+      if (wizard.steps[wizard.currentStep] === 'confirm') {
+        const data = wizard.getData();
+        summary.name.textContent = data.name || '';
+        summary.email.textContent = data.email || '';
+        summary.address.textContent = data.address || '';
+        summary.city.textContent = data.city || '';
+      }
+
+      updateProgress();
+    }
+
+    // Validation
+    function validateCurrentStep() {
+      const currentStepId = wizard.steps[wizard.currentStep];
+      let isValid = true;
+
+      if (currentStepId === 'personal') {
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const nameError = document.getElementById('name-error');
+        const emailError = document.getElementById('email-error');
+
+        name.classList.remove('error');
+        email.classList.remove('error');
+        nameError.textContent = '';
+        emailError.textContent = '';
+
+        if (!name.value.trim()) {
+          name.classList.add('error');
+          nameError.textContent = 'Name is required';
+          isValid = false;
+        }
+
+        if (!email.value.trim()) {
+          email.classList.add('error');
+          emailError.textContent = 'Email is required';
+          isValid = false;
+        } else if (!email.value.includes('@')) {
+          email.classList.add('error');
+          emailError.textContent = 'Please enter a valid email';
+          isValid = false;
+        }
+      }
+
+      if (currentStepId === 'address') {
+        const address = document.getElementById('address');
+        const city = document.getElementById('city');
+        const addressError = document.getElementById('address-error');
+        const cityError = document.getElementById('city-error');
+
+        address.classList.remove('error');
+        city.classList.remove('error');
+        addressError.textContent = '';
+        cityError.textContent = '';
+
+        if (!address.value.trim()) {
+          address.classList.add('error');
+          addressError.textContent = 'Address is required';
+          isValid = false;
+        }
+
+        if (!city.value.trim()) {
+          city.classList.add('error');
+          cityError.textContent = 'City is required';
+          isValid = false;
+        }
+      }
+
+      return isValid;
+    }
+
+    // Save current step data
+    function saveCurrentStepData() {
+      const currentStepId = wizard.steps[wizard.currentStep];
+      const data = {};
+
+      if (currentStepId === 'personal') {
+        data.name = document.getElementById('name').value;
+        data.email = document.getElementById('email').value;
+      } else if (currentStepId === 'address') {
+        data.address = document.getElementById('address').value;
+        data.city = document.getElementById('city').value;
+      }
+
+      wizard.setData(data);
+    }
+
+    // Navigation handlers
+    prevBtn.addEventListener('click', () => {
+      wizard.prev();
+      updateStep();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (!validateCurrentStep()) {
+        return;
+      }
+
+      saveCurrentStepData();
+
+      if (wizard.isLast()) {
+        // Complete
+        document.querySelectorAll('.step-content').forEach(el => {
+          el.classList.remove('active');
+        });
+        document.querySelector('[data-step="success"]').classList.add('active');
+        document.getElementById('navigation').style.display = 'none';
+        return;
+      }
+
+      wizard.next();
+      updateStep();
+    });
+
+    // Initial render
+    updateStep();
+  </script>
+</body>
+</html>

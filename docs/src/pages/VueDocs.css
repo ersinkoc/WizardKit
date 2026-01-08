@@ -1,0 +1,76 @@
+.page.vue-docs {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.page.vue-docs h1 {
+  font-size: 48px;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page.vue-docs section {
+  margin-bottom: 60px;
+}
+
+.page.vue-docs h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.page.vue-docs h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.page.vue-docs p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.page.vue-docs code {
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #333;
+}
+
+.page.vue-docs pre {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.page.vue-docs pre code {
+  background: transparent;
+  padding: 0;
+  color: #d4d4d4;
+}
+
+.page.vue-docs .composable,
+.page.vue-docs .component {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.page.vue-docs .returns {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #888;
+}
