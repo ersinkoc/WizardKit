@@ -29,24 +29,24 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./react": {
+      "types": "./dist/react.d.ts",
       "import": "./dist/react.js",
-      "require": "./dist/react.cjs",
-      "types": "./dist/react.d.ts"
+      "require": "./dist/react.cjs"
     },
     "./vue": {
+      "types": "./dist/vue.d.ts",
       "import": "./dist/vue.js",
-      "require": "./dist/vue.cjs",
-      "types": "./dist/vue.d.ts"
+      "require": "./dist/vue.cjs"
     },
     "./svelte": {
+      "types": "./dist/svelte.d.ts",
       "import": "./dist/svelte.js",
-      "require": "./dist/svelte.cjs",
-      "types": "./dist/svelte.d.ts"
+      "require": "./dist/svelte.cjs"
     }
   },
   "files": [

@@ -133,31 +133,32 @@ export function validateField(
   validation: FieldValidation,
   data: Record<string, unknown>
 ): string | null {
-  // Required check
-  if (validation.required && !validationRules.required(value)) {
+  // Check if value is empty (null, undefined, or empty string after trim)
+  const isEmpty =
+    value === null ||
+    value === undefined ||
+    value === '' ||
+    (typeof value === 'string' && value.trim() === '')
+
+  // Required check (only if no other validations apply)
+  if (validation.required && isEmpty && !validation.minLength && !validation.min && !validation.max && !validation.maxLength && !validation.pattern && !validation.email && !validation.url && !validation.custom) {
     return getErrorMessage('required', validation)
   }
 
   // Skip other validations if value is empty and not required
-  if (
-    !validation.required &&
-    (value === null ||
-      value === undefined ||
-      value === '' ||
-      (typeof value === 'string' && value.trim() === ''))
-  ) {
+  if (!validation.required && isEmpty) {
     return null
   }
 
-  // Min length
-  if (validation.minLength !== undefined) {
+  // Min length (check before required for better UX)
+  if (validation.minLength !== undefined && typeof value === 'string') {
     if (!validationRules.minLength(value, validation.minLength)) {
       return getErrorMessage('minLength', validation)
     }
   }
 
   // Max length
-  if (validation.maxLength !== undefined) {
+  if (validation.maxLength !== undefined && typeof value === 'string') {
     if (!validationRules.maxLength(value, validation.maxLength)) {
       return getErrorMessage('maxLength', validation)
     }
@@ -197,6 +198,11 @@ export function validateField(
   // Custom
   if (validation.custom && !validationRules.custom(value, validation.custom, data)) {
     return getErrorMessage('custom', validation)
+  }
+
+  // Required check as fallback if value is still empty
+  if (validation.required && isEmpty) {
+    return getErrorMessage('required', validation)
   }
 
   return null

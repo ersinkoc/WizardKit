@@ -64,7 +64,7 @@ export class Wizard<TData = Record<string, unknown>>
       this.stateManager,
       this.eventEmitter,
       {
-        linear: config.linear ?? true,
+        linear: config.linear ?? false,
         validateOnNext: config.validateOnNext ?? true,
         validateOnPrev: config.validateOnPrev ?? false,
       }
@@ -353,7 +353,8 @@ export class Wizard<TData = Record<string, unknown>>
     // Create new object without the field
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [field]: removed, ...rest } = data
-    this.setData(rest as Partial<TData>)
+    // Use replace: true to fully replace data instead of merging
+    this.setData(rest as Partial<TData>, true)
   }
 
   getStepData(_stepId: string): Partial<TData> {

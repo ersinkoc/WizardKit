@@ -102,6 +102,7 @@ describe('PersistenceManager', () => {
           },
         } as any,
         fields: ['data', 'currentStep'],
+        debounce: 0,
       })
 
       const state: Partial<WizardState<TestData>> = {

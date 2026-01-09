@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(3.9% 0 0);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(3.9% 0 0);
+  --color-popover: oklch(100% 0 0);
+  --color-popover-foreground: oklch(3.9% 0 0);
+  --color-primary: oklch(58% 0.2 264);
+  --color-primary-foreground: oklch(98% 0 0);
+  --color-secondary: oklch(96.1% 0 0);
+  --color-secondary-foreground: oklch(9% 0 0);
+  --color-muted: oklch(96.1% 0 0);
+  --color-muted-foreground: oklch(45.1% 0 0);
+  --color-accent: oklch(96.1% 0 0);
+  --color-accent-foreground: oklch(9% 0 0);
+  --color-destructive: oklch(60.2% 0.2 24);
+  --color-destructive-foreground: oklch(98% 0 0);
+  --color-border: oklch(89.8% 0 0);
+  --color-input: oklch(89.8% 0 0);
+  --color-ring: oklch(58% 0.2 264);
+  --radius: 0.75rem;
+}
+
+@layer base {
+  .dark {
+    --color-background: oklch(3.9% 0 0);
+    --color-foreground: oklch(98% 0 0);
+    --color-card: oklch(6% 0 0);
+    --color-card-foreground: oklch(98% 0 0);
+    --color-popover: oklch(6% 0 0);
+    --color-popover-foreground: oklch(98% 0 0);
+    --color-primary: oklch(58% 0.2 264);
+    --color-primary-foreground: oklch(98% 0 0);
+    --color-secondary: oklch(14.9% 0 0);
+    --color-secondary-foreground: oklch(98% 0 0);
+    --color-muted: oklch(14.9% 0 0);
+    --color-muted-foreground: oklch(63.9% 0 0);
+    --color-accent: oklch(14.9% 0 0);
+    --color-accent-foreground: oklch(98% 0 0);
+    --color-destructive: oklch(30.6% 0.2 24);
+    --color-destructive-foreground: oklch(98% 0 0);
+    --color-border: oklch(14.9% 0 0);
+    --color-input: oklch(14.9% 0 0);
+    --color-ring: oklch(58% 0.2 264);
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code, pre {
+    font-family: var(--font-mono);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in srgb, var(--color-muted-foreground) 50% transparent);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

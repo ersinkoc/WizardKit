@@ -50,25 +50,54 @@ const wizard = createWizard({
     { id: 'address', title: 'Address' },
     { id: 'confirm', title: 'Confirm' },
   ],
-  onComplete: (data) => console.log('Done!', data),
+  initialData: {
+    name: '',
+    email: '',
+  },
 })
 
+// Navigate
 wizard.next()
+wizard.prev()
+wizard.goTo('address')
+
+// Get state
+const { currentStep, data, progress } = wizard.getState()
+
+// Set data
 wizard.setData({ name: 'John' })
+wizard.setField('email', 'john@example.com')
+
+// Listen to events
+wizard.on('complete', ({ data }) => {
+  console.log('Wizard completed!', data)
+})
 ```
 
 ## React
 
 ```tsx
-import { WizardProvider, useWizard, WizardStepper } from '@oxog/wizardkit/react'
+import { useWizard } from '@oxog/wizardkit/react'
 
-function App() {
+function MyWizard() {
+  const wizard = useWizard({
+    steps: [
+      { id: 'info', title: 'Information' },
+      { id: 'address', title: 'Address' },
+      { id: 'confirm', title: 'Confirm' },
+    ],
+  })
+
   return (
-    <WizardProvider wizard={wizard}>
-      <WizardStepper />
-      <WizardContent />
-      <WizardNavigation />
-    </WizardProvider>
+    <div>
+      <h1>{wizard.currentStep.title}</h1>
+      <button onClick={wizard.prev} disabled={wizard.isFirst}>
+        Previous
+      </button>
+      <button onClick={wizard.next} disabled={wizard.isLast}>
+        {wizard.isLast ? 'Complete' : 'Next'}
+      </button>
+    </div>
   )
 }
 ```

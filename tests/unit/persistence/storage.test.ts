@@ -12,8 +12,8 @@ describe('localStorage adapter', () => {
   beforeEach(() => {
     mockLocalStorage = {}
 
-    // Mock localStorage
-    global.localStorage = {
+    // Define the mock localStorage object
+    const mockStorage = {
       getItem: vi.fn((key: string) => mockLocalStorage[key] || null),
       setItem: vi.fn((key: string, value: string) => {
         mockLocalStorage[key] = value
@@ -22,12 +22,20 @@ describe('localStorage adapter', () => {
         delete mockLocalStorage[key]
       }),
       clear: vi.fn(() => {
-        mockLocalStorage = {}
+        Object.keys(mockLocalStorage).forEach(key => {
+          delete mockLocalStorage[key]
+        })
       }),
       get length() {
         return Object.keys(mockLocalStorage).length
       },
       key: vi.fn((index: number) => Object.keys(mockLocalStorage)[index] || null),
+    }
+
+    // Mock both global and window localStorage
+    global.localStorage = mockStorage as any
+    ;(global as any).window = {
+      localStorage: mockStorage,
     }
   })
 
@@ -70,7 +78,8 @@ describe('localStorage adapter', () => {
   })
 
   it('should handle localStorage errors gracefully', () => {
-    global.localStorage.getItem = vi.fn(() => {
+    const window = global as any
+    window.window.localStorage.getItem = vi.fn(() => {
       throw new Error('Storage error')
     })
 
@@ -86,8 +95,8 @@ describe('sessionStorage adapter', () => {
   beforeEach(() => {
     mockSessionStorage = {}
 
-    // Mock sessionStorage
-    global.sessionStorage = {
+    // Define the mock sessionStorage object
+    const mockStorage = {
       getItem: vi.fn((key: string) => mockSessionStorage[key] || null),
       setItem: vi.fn((key: string, value: string) => {
         mockSessionStorage[key] = value
@@ -96,13 +105,19 @@ describe('sessionStorage adapter', () => {
         delete mockSessionStorage[key]
       }),
       clear: vi.fn(() => {
-        mockSessionStorage = {}
+        Object.keys(mockSessionStorage).forEach(key => {
+          delete mockSessionStorage[key]
+        })
       }),
       get length() {
         return Object.keys(mockSessionStorage).length
       },
       key: vi.fn((index: number) => Object.keys(mockSessionStorage)[index] || null),
     }
+
+    // Mock both global and window sessionStorage
+    global.sessionStorage = mockStorage as any
+    ;(global as any).window.sessionStorage = mockStorage
   })
 
   afterEach(() => {

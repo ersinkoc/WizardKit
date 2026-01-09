@@ -78,25 +78,28 @@ describe('createWizard', () => {
     expect(wizard.currentStep.id).toBe('step2')
   })
 
-  it('should respect linear mode', () => {
+  it('should respect linear mode', async () => {
     const config: WizardConfig<TestData> = {
       steps: [
         { id: 'step1', title: 'Step 1' },
         { id: 'step2', title: 'Step 2' },
+        { id: 'step3', title: 'Step 3' },
       ],
       linear: true,
     }
 
     const wizard = createWizard<TestData>(config)
 
-    // Linear mode should prevent jumping ahead
-    wizard.goTo('step2').then((canGo) => {
-      // In linear mode, should not be able to jump to step 2
-      expect(canGo).toBe(false)
-    })
+    // In linear mode, should not be able to jump directly to step3
+    const canGoToStep3 = await wizard.goTo('step3')
+    expect(canGoToStep3).toBe(false)
+
+    // But should be able to go to the next step (step2)
+    const canGoToStep2 = await wizard.goTo('step2')
+    expect(canGoToStep2).toBe(true)
   })
 
-  it('should restore from persistence if configured', () => {
+  it('should restore from persistence if configured', async () => {
     // Mock localStorage
     const mockStorage = {
       'test-wizard': JSON.stringify({
@@ -106,7 +109,8 @@ describe('createWizard', () => {
       }),
     }
 
-    global.localStorage = {
+    // Mock both global and window localStorage
+    const mockLocalStorage = {
       getItem: (key) => mockStorage[key as keyof typeof mockStorage] || null,
       setItem: () => {},
       removeItem: () => {},
@@ -115,6 +119,11 @@ describe('createWizard', () => {
         return Object.keys(mockStorage).length
       },
       key: () => null,
+    }
+
+    global.localStorage = mockLocalStorage as any
+    ;(global as any).window = {
+      localStorage: mockLocalStorage,
     }
 
     const config: WizardConfig<TestData> = {
@@ -127,6 +136,9 @@ describe('createWizard', () => {
     }
 
     const wizard = createWizard<TestData>(config)
+
+    // Wait for async restoration to complete
+    await new Promise((resolve) => setTimeout(resolve, 50))
 
     // Should restore data
     expect(wizard.data.name).toBe('Restored')
